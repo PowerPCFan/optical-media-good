@@ -1,6 +1,4 @@
-// Commit `623828c3f1497e45bbda783bee1bf8f245e33ce9` on `https://github.com/PowerPCFan/optical-media-good` branch `main`
-// var urlStart = "https://raw.githubusercontent.com/PowerPCFan/optical-media-good/623828c3f1497e45bbda783bee1bf8f245e33ce9/img/wallpapers";
-var urlStart = "//wsrv.nl/?url=raw.githubusercontent.com/PowerPCFan/optical-media-good/623828c3f1497e45bbda783bee1bf8f245e33ce9/img/wallpapers";
+var urlStart = "img/wallpapers";
 var backgrounds = [
     urlStart + "/Bliss.jpg",
     urlStart + "/Red-moon-desert.jpg",

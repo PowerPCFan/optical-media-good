@@ -21,14 +21,14 @@ var windows = [
                         '<img src="img/ie/home.png" style="width: 16px; height: 16px;">' +
                     '</button>' +
                     '<span style="margin: 0 8px;">Address</span>' +
-                    '<input type="text" id="ie-address-bar" value="https://www.google.com/" onkeypress="ieAddressKeyPress(event)" style="flex: 1; margin-right: 4px; height: 22px;">' +
+                    '<input type="text" id="ie-address-bar" value="http://frogfind.com/" onkeypress="ieAddressKeyPress(event)" style="flex: 1; margin-right: 4px; height: 22px;">' +
                     '<button onclick="ieGo()" style="height: 26px; padding: 2px 8px; display: flex; align-items: center; gap: 4px;">' +
                         '<img src="img/ie/go.png" style="width: 16px; height: 16px;">' +
                         '<span>Go</span>' +
                     '</button>' +
                 '</div>' +
             '</div>' +
-            '<iframe id="ie-iframe" src="https://www.google.com/webhp?igu=1" style="width: 100%; height: 400px; border: none; background: white;"></iframe>' +
+            '<iframe id="ie-iframe" src="http://frogfind.com/" style="width: 100%; height: 400px; border: none; background: white;"></iframe>' +
         '</div>',
         icon: 'img/apps/ie6.png',
         taskbarText: 'Internet Explorer',

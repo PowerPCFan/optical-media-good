@@ -1,11 +1,17 @@
 @font-face {
-    font-family: "Chicago";
-    src: url("fonts/chicago.ttf") format("truetype");
+    font-family: 'Chicago';
+    src: url("fonts/chicago.eot?#iefix") format('embedded-opentype');
+    src: url("fonts/chicago.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
     font-family: "Tahoma";
+    src: url("fonts/tahoma.eot?#iefix") format("embedded-opentype");
     src: url("fonts/tahoma.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
 body {
@@ -178,20 +184,6 @@ pre::selection {
     box-sizing: border-box;
     z-index: 9999;
 }
-
-/* .window:not(.window-active):before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 0.15;
-    filter: alpha(opacity=15);
-    z-index: 1;
-    border-radius: 8px;
-} */
 
 .window-inactive .title-bar .title-bar-text {
     color: #d0d0d0 !important;

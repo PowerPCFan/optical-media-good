@@ -42,10 +42,10 @@ OpticalMediaGood.IEBrowser.refresh = function() {
 OpticalMediaGood.IEBrowser.home = function() {
     var iframe = document.getElementById('ie-iframe');
     var addressBar = document.getElementById('ie-address-bar');
-    var homeUrl = 'https://www.google.com/webhp?igu=1';
+    var homeUrl = 'http://frogfind.com/';
     if (iframe && addressBar) {
         iframe.src = homeUrl;
-        addressBar.value = 'https://www.google.com/';
+        addressBar.value = 'http://frogfind.com/';
     }
 };
 
@@ -60,7 +60,7 @@ OpticalMediaGood.IEBrowser.go = function() {
             url = url.replace(/^\s+|\s+$/g, '');
         }
         if (url && url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-            url = 'https://' + url;
+            url = 'http://' + url;
             addressBar.value = url;
         }
         iframe.src = url;
@@ -69,7 +69,8 @@ OpticalMediaGood.IEBrowser.go = function() {
 
 
 OpticalMediaGood.IEBrowser.addressKeyPress = function(event) {
-    if (event.key === 'Enter') {
+    var key = event.key || event.keyCode;
+    if (key === 'Enter' || key === 13) {
         OpticalMediaGood.IEBrowser.go();
     }
 };
