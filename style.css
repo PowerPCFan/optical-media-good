@@ -179,7 +179,7 @@ pre::selection {
     z-index: 9999;
 }
 
-.window:not(.window-active):before {
+/* .window:not(.window-active):before {
     content: '';
     position: absolute;
     top: 0;
@@ -190,6 +190,9 @@ pre::selection {
     opacity: 0.15;
     filter: alpha(opacity=15);
     z-index: 1;
-    /* to roughly match border radius of window */
     border-radius: 8px;
+} */
+
+.window-inactive .title-bar .title-bar-text {
+    color: #d0d0d0 !important;
 }

@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.6/dist/XP.css">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Cross-browser util functions + polyfills -->
+    <!-- polyfills + cross-platform functions -->
     <script src="js/compatibility.js"></script>
 
-    <!-- Random background picker -->
+    <!-- random background -->
     <script src="js/randomBackground.js"></script>
 </head>
 <body>
@@ -22,10 +22,13 @@
         </div>
     </div>
 
-    <!-- Module namespaces -->
+    <!-- Module dependencies (can load after page structure) -->
     <script src="js/namespaces.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/windowManager.js"></script>
+    <script src="js/ieBrowser.js"></script>
 
-    <!-- Main script -->
+    <!-- Main initialization -->
     <script src="script.js"></script>
 </body>
 </html>

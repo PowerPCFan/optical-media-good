@@ -111,9 +111,14 @@ function forEachCompat(nodeList, callback) {
 
 
 function setPositionCompat(element, x, y) {
-    if (typeof element.style.transform !== 'undefined' || typeof element.style.webkitTransform !== 'undefined') {
-        element.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    if (typeof element.style.transform !== 'undefined') {
+        element.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    } else if (typeof element.style.webkitTransform !== 'undefined') {
+        element.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
+    } else if (typeof element.style.msTransform !== 'undefined') {
+        element.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
     } else {
+        element.style.position = 'absolute';
         element.style.left = x + 'px';
         element.style.top = y + 'px';
     }
