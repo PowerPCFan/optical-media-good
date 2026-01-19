@@ -173,10 +173,10 @@ OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
             width: windowElement.style.width || (computedStyle ? computedStyle.width : ''),
             height: windowElement.style.height || (computedStyle ? computedStyle.height : ''),
             transform: windowElement.style.transform || "translate3d(0px, 0px, 0)",
-            top: windowElement.style.top || "auto",
-            left: windowElement.style.left || "auto",
-            right: windowElement.style.right || "auto",
-            bottom: windowElement.style.bottom || "auto",
+            top: windowElement.style.top,
+            left: windowElement.style.left,
+            right: windowElement.style.right,
+            bottom: windowElement.style.bottom,
             position: windowElement.style.position || "absolute",
             xOffset: state.xOffset,
             yOffset: state.yOffset
@@ -320,45 +320,14 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
     var currentDragWindow = null;
 
     function dragStart(e) {
+        // Don't start dragging when clicking buttons
+        if (getClosestElement(e.target, '.title-bar-controls')) return;
+
         var titleBar = getClosestElement(e.target, '.title-bar');
         if (!titleBar) return;
 
         var windowId = titleBar.getAttribute('data-window-id');
-        var windowElement = document.getElementById(windowId);
-        var state = OpticalMediaGood.windowStates[windowId];
-
-        var clientX, clientY;
-        if (e.type === "touchstart") {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-        } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
-        }
-
-        if (!state.isMaximized) {
-            initialX = clientX - state.xOffset;
-            initialY = clientY - state.yOffset;
-        } else {
-            var windowWidth = windowElement.offsetWidth;
-            var clickPercentage = clientX / windowWidth;
-            var newWidth = parseInt(windowElement.style.width) || 700;
-            var newX = clientX - (newWidth * clickPercentage);
-            var newY = clientY - 15;
-
-            OpticalMediaGood.WindowManager.State.restoreWindow(windowId);
-            state.xOffset = newX;
-            state.yOffset = newY;
-
-            initialX = clientX - newX;
-            initialY = clientY - newY;
-
-            OpticalMediaGood.Utils.setTranslate(newX, newY, windowElement);
-        }
-        
-        state.isDragging = true;
         currentDragWindow = windowId;
-        addClass(windowElement, 'dragging');
         OpticalMediaGood.WindowManager.State.focusWindow(windowId);
     }
 
@@ -366,11 +335,13 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
         if (currentDragWindow) {
             var state = OpticalMediaGood.windowStates[currentDragWindow];
             var windowElement = document.getElementById(currentDragWindow);
-            
-            initialX = currentX;
-            initialY = currentY;
-            state.isDragging = false;
-            removeClass(windowElement, 'dragging');
+
+            if (state.isDragging){
+                initialX = currentX;
+                initialY = currentY;
+                state.isDragging = false;
+                removeClass(windowElement, 'dragging');
+            }
             currentDragWindow = null;
         }
     }
@@ -381,7 +352,39 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
         var state = OpticalMediaGood.windowStates[currentDragWindow];
         var windowElement = document.getElementById(currentDragWindow);
 
-        if (state.isDragging) {
+        if (!state.isDragging) {
+            var clientX, clientY;
+            if (e.type === "touchmove") {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            if (!state.isMaximized) {
+                initialX = clientX - state.xOffset;
+                initialY = clientY - state.yOffset;
+            } else {
+                var windowWidth = windowElement.offsetWidth;
+                var clickPercentage = clientX / windowWidth;
+                var newWidth = parseInt(state.originalStyles.width) || 700;
+                var newX = clientX - (newWidth * clickPercentage);
+                var newY = clientY - 15;
+
+                OpticalMediaGood.WindowManager.State.restoreWindow(currentDragWindow);
+                state.xOffset = newX;
+                state.yOffset = newY;
+
+                initialX = clientX - newX;
+                initialY = clientY - newY;
+
+                OpticalMediaGood.Utils.setTranslate(newX, newY, windowElement);
+            }
+
+            state.isDragging = true;
+            addClass(windowElement, 'dragging');
+        } else {
             e.preventDefault();
             
             if (e.type === "touchmove") {
