@@ -320,6 +320,9 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
     var currentDragWindow = null;
 
     function dragStart(e) {
+        // Only react on main button (usually left click)
+        if (e.type === "mousedown" && e.button !== 0) return;
+        
         // Don't start dragging when clicking buttons
         if (getClosestElement(e.target, '.title-bar-controls')) return;
 
