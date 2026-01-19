@@ -1,6 +1,5 @@
 @font-face {
     font-family: 'Chicago';
-    src: url("fonts/chicago.eot?#iefix") format('embedded-opentype');
     src: url("fonts/chicago.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
@@ -8,7 +7,6 @@
 
 @font-face {
     font-family: "Tahoma";
-    src: url("fonts/tahoma.eot?#iefix") format("embedded-opentype");
     src: url("fonts/tahoma.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
@@ -38,11 +36,11 @@ body {
 .title-bar {
     /* pretty sure XP uses Tahoma not Trebuchet MS for window titles */
     /* so this is just a little patch for that */
-    font-family: "Tahoma";
+    font-family: "Tahoma", "TahomaIE", system-ui;
 }
 
 .heading {
-    font-family: "Chicago", serif;
+    font-family: "Chicago", "ChicagoIE", serif;
     font-size: 32px;
 }
 
@@ -96,7 +94,7 @@ body {
     background: url("img/button/1.png") no-repeat 0 0;
     border: 1px solid #306FD9;
     border-radius: 2px;
-    font-family: "Tahoma", monospace;
+    font-family: "Tahoma", "TahomaIE", monospace;
     font-size: 14px;
     line-height: 26px;
     padding: 0 8px;
@@ -126,7 +124,7 @@ body {
     display: inline-block;
     vertical-align: top;
     height: 32px;
-    font-family: "Tahoma", monospace;
+    font-family: "Tahoma", "TahomaIE", monospace;
     font-size: 14px;
     line-height: 14px;
     background: linear-gradient(to bottom, #1290E9 0%, #19B9F3 9%, #1290E9 18%, #1290E9 92%, #1941A5 100%) center/cover no-repeat;

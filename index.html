@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Optical Media Good</title>
-    <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.6/dist/XP.css">
+    <link rel="stylesheet" href="xp.css">
     <link rel="stylesheet" href="style.css">
+
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="ie.css">
+    <![endif]-->
 
     <!-- polyfills + cross-platform functions -->
     <script src="js/compatibility.js"></script>
-
-    <!-- random background -->
-    <script src="js/randomBackground.js"></script>
 </head>
 <body>
     <div id="windows-container"></div>
@@ -22,6 +23,10 @@
         </div>
     </div>
 
+    <!-- random background -->
+    <script src="js/randomBackground.js"></script>
+
+    <!-- script prerequisites -->
     <script src="js/namespaces.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/windowManager.js"></script>

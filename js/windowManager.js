@@ -6,7 +6,7 @@ OpticalMediaGood.WindowManager.Renderer.createWindowHTML = function(windowConfig
 
     return '' +
         '<div class="window" id="' + windowConfig.id + '" style="' + widthStyle + ' ' + heightStyle + ' ' + displayStyle + ' ' + customStyle + '">' +
-            '<div class="title-bar" data-window-id="' + windowConfig.id + '">' +
+            '<div class="title-bar" id="' + windowConfig.id + OpticalMediaGood.Suffixes.TITLEBAR + '">' +
                 '<div class="title-bar-text">' + windowConfig.title + '</div>' +
                 '<div class="title-bar-controls">' +
                     '<button class="minimize-btn" aria-label="Minimize"></button>' +
@@ -23,7 +23,7 @@ OpticalMediaGood.WindowManager.Renderer.createWindowHTML = function(windowConfig
 
 OpticalMediaGood.WindowManager.Renderer.createTaskbarTabHTML = function(windowConfig) {
     return '' +
-        '<div class="open-tab ' + (windowConfig.active ? 'active' : '') + '" data-window-id="' + windowConfig.id + '">' +
+        '<div class="open-tab ' + (windowConfig.active ? 'active' : '') + '" id="' + windowConfig.id + OpticalMediaGood.Suffixes.TAB + '">' +
             '<img src="' + windowConfig.icon + '"> ' + windowConfig.taskbarText +
         '</div>';
 };
@@ -54,8 +54,7 @@ OpticalMediaGood.WindowManager.State.focusWindow = function(windowId) {
         for (var j = 0; j < allTabs.length; j++) {
             var tab = allTabs[j];
             if (hasClass(tab, 'open-tab')) {
-                var tabWindowId = tab.getAttribute('data-window-id');
-                if (tabWindowId === windowId) {
+                if (tab.id === windowId + OpticalMediaGood.Suffixes.TAB) {
                     addClass(tab, 'active');
                 } else {
                     removeClass(tab, 'active');
@@ -76,9 +75,7 @@ OpticalMediaGood.WindowManager.State.updateTaskbarActiveState = function(activeW
         var tab = allTabElements[i];
 
         if (hasClass(tab, 'open-tab')) {
-            var tabWindowId = tab.getAttribute('data-window-id');
-
-            if (tabWindowId === activeWindowId) {
+            if (tab.id === activeWindowId + OpticalMediaGood.Suffixes.TAB) {
                 addClass(tab, 'active');
             } else {
                 removeClass(tab, 'active');
@@ -117,8 +114,7 @@ OpticalMediaGood.WindowManager.State.updateAllTaskbarTabs = function() {
     for (var j = 0; j < allTabElements.length; j++) {
         var tab = allTabElements[j];
         if (hasClass(tab, 'open-tab')) {
-            var tabWindowId = tab.getAttribute('data-window-id');
-            if (activeWindowId && tabWindowId === activeWindowId) {
+            if (activeWindowId && tab.id === activeWindowId + OpticalMediaGood.Suffixes.TAB) {
                 addClass(tab, 'active');
             } else {
                 removeClass(tab, 'active');
@@ -163,7 +159,7 @@ OpticalMediaGood.WindowManager.State.unfocusAllWindows = function() {
 OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
     var state = OpticalMediaGood.windowStates[windowId];
     var windowElement = document.getElementById(windowId);
-    var taskbarTab = querySelectorCompat('[data-window-id="' + windowId + '"]');
+    var taskbarTab = document.getElementById(windowId + OpticalMediaGood.Suffixes.TAB);
     this.focusWindow(windowId);
 
     if (!state.isMaximized) {
@@ -304,7 +300,7 @@ OpticalMediaGood.WindowManager.Init.initializeDesktopClick = function() {
         var titleBar = getClosestElement(e.target, '.title-bar');
         
         if (titleBar) {
-            var windowId = titleBar.getAttribute('data-window-id');
+            var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
             OpticalMediaGood.WindowManager.State.focusWindow(windowId);
         } else if (windowElement) {
             var windowId = windowElement.id;
@@ -329,7 +325,7 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
         var titleBar = getClosestElement(e.target, '.title-bar');
         if (!titleBar) return;
 
-        var windowId = titleBar.getAttribute('data-window-id');
+        var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
         currentDragWindow = windowId;
         OpticalMediaGood.WindowManager.State.focusWindow(windowId);
     }
@@ -420,7 +416,7 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
         if (!button) return;
 
         var titleBar = getClosestElement(button, '.title-bar');
-        var windowId = titleBar.getAttribute('data-window-id');
+        var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
         var windowElement = document.getElementById(windowId);
         var state = OpticalMediaGood.windowStates[windowId];
 
@@ -498,7 +494,7 @@ OpticalMediaGood.WindowManager.Init.initializeTaskbar = function() {
         var tab = getClosestElement(e.target, '.open-tab');
         if (!tab) return;
 
-        var windowId = tab.getAttribute('data-window-id');
+        var windowId = tab.id.replace(OpticalMediaGood.Suffixes.TAB, '');
         var windowElement = document.getElementById(windowId);
         var state = OpticalMediaGood.windowStates[windowId];
 

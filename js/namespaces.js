@@ -1,14 +1,21 @@
+// Main namespace
 var OpticalMediaGood = OpticalMediaGood || {};
 
-// Consolidated window management
+
+// Constants
+OpticalMediaGood.Suffixes = {
+    TITLEBAR: '-titlebar',
+    TAB: '-tab'
+};
+
+
+// Other namespaces
 OpticalMediaGood.WindowManager = {};
 OpticalMediaGood.WindowManager.Renderer = {};
 OpticalMediaGood.WindowManager.State = {};
 OpticalMediaGood.WindowManager.Init = {};
 
-// Other modules
 OpticalMediaGood.IEBrowser = {};
 OpticalMediaGood.Utils = {};
 
-// Shared data
 OpticalMediaGood.windowStates = {};

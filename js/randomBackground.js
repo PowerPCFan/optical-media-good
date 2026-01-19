@@ -10,8 +10,6 @@ var backgrounds = [
 
 var choice = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
-addEventCompat(document, "DOMContentLoaded", function() {
-    document.body.style.backgroundImage = "url(" + choice + ")";
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-});
+document.body.style.backgroundImage = "url(" + choice + ")";
+document.body.style.backgroundSize = "cover";
+document.body.style.backgroundPosition = "center";
