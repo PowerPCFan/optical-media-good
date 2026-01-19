@@ -37,27 +37,44 @@ OpticalMediaGood.WindowManager.State.focusWindow = function(windowId) {
 
         if (win.id === windowId) {
             win.style.zIndex = 1000 + allWindows.length;
-            removeClass(win, 'window-active');
-            removeClass(win, 'window-inactive');
-            addClass(win, 'window-active');
+
+            if (hasClass(win, 'window-inactive')) {
+                removeClass(win, 'window-inactive');
+            }
+
+            if (!hasClass(win, 'window-active')) {
+                addClass(win, 'window-active');
+            }
         } else {
             win.style.zIndex = 1000 + i;
-            removeClass(win, 'window-active');
-            addClass(win, 'window-inactive');
+
+            if (hasClass(win, 'window-active')) {
+                removeClass(win, 'window-active');
+            }
+
+            if (!hasClass(win, 'window-inactive')) {
+                addClass(win, 'window-inactive');
+            }
         }
     }
 
-    // Update taskbar tabs - sync with window focus
     var taskbarContainer = document.getElementById('taskbar-tabs');
+
     if (taskbarContainer) {
         var allTabs = taskbarContainer.getElementsByTagName('div');
+
         for (var j = 0; j < allTabs.length; j++) {
             var tab = allTabs[j];
+
             if (hasClass(tab, 'open-tab')) {
                 if (tab.id === windowId + OpticalMediaGood.Suffixes.TAB) {
-                    addClass(tab, 'active');
+                    if (!hasClass(tab, 'active')) {
+                        addClass(tab, 'active');
+                    }
                 } else {
-                    removeClass(tab, 'active');
+                    if (hasClass(tab, 'active')) {
+                        removeClass(tab, 'active');
+                    }
                 }
             }
         }
@@ -76,9 +93,13 @@ OpticalMediaGood.WindowManager.State.updateTaskbarActiveState = function(activeW
 
         if (hasClass(tab, 'open-tab')) {
             if (tab.id === activeWindowId + OpticalMediaGood.Suffixes.TAB) {
-                addClass(tab, 'active');
+                if (!hasClass(tab, 'active')) {
+                    addClass(tab, 'active');
+                }
             } else {
-                removeClass(tab, 'active');
+                if (hasClass(tab, 'active')) {
+                    removeClass(tab, 'active');
+                }
             }
         }
     }
@@ -86,38 +107,40 @@ OpticalMediaGood.WindowManager.State.updateTaskbarActiveState = function(activeW
 
 
 OpticalMediaGood.WindowManager.State.updateAllTaskbarTabs = function() {
-    // Find ALL visible windows and their z-indexes
     var visibleWindows = [];
     
     for (var i = 0; i < windows.length; i++) {
         var windowElement = document.getElementById(windows[i].id);
+
         if (windowElement && windowElement.style.display !== 'none') {
-            var zIndex = parseInt(windowElement.style.zIndex) || 1000;
             visibleWindows.push({
                 id: windows[i].id,
-                zIndex: zIndex
+                zIndex: parseInt(windowElement.style.zIndex) || 1000
             });
         }
     }
-    
-    // Sort by z-index to find the topmost window
+
     visibleWindows.sort(function(a, b) { return b.zIndex - a.zIndex; });
-    
-    // The topmost visible window should have active taskbar tab
+
     var activeWindowId = visibleWindows.length > 0 ? visibleWindows[0].id : null;
-    
-    // Update ALL taskbar tabs
+
     var taskbarContainer = document.getElementById('taskbar-tabs');
     if (!taskbarContainer) return;
 
     var allTabElements = taskbarContainer.getElementsByTagName('div');
+
     for (var j = 0; j < allTabElements.length; j++) {
         var tab = allTabElements[j];
+
         if (hasClass(tab, 'open-tab')) {
             if (activeWindowId && tab.id === activeWindowId + OpticalMediaGood.Suffixes.TAB) {
-                addClass(tab, 'active');
+                if (!hasClass(tab, 'active')) {
+                    addClass(tab, 'active');
+                }
             } else {
-                removeClass(tab, 'active');
+                if (hasClass(tab, 'active')) {
+                    removeClass(tab, 'active');
+                }
             }
         }
     }
@@ -126,29 +149,45 @@ OpticalMediaGood.WindowManager.State.updateAllTaskbarTabs = function() {
 
 OpticalMediaGood.WindowManager.State.unfocusWindow = function(windowId) {
     var windowElement = document.getElementById(windowId);
+
     if (windowElement) {
-        removeClass(windowElement, 'window-active');
-        addClass(windowElement, 'window-inactive');
+        if (hasClass(windowElement, 'window-active')) {
+            removeClass(windowElement, 'window-active');
+        }
+
+        if (!hasClass(windowElement, 'window-inactive')) {
+            addClass(windowElement, 'window-inactive');
+        }
     }
 };
 
 
 OpticalMediaGood.WindowManager.State.unfocusAllWindows = function() {
-    // Unfocus all windows
     var allWindows = querySelectorAllCompat('.window');
+
     for (var i = 0; i < allWindows.length; i++) {
-        removeClass(allWindows[i], 'window-active');
-        addClass(allWindows[i], 'window-inactive');
-        allWindows[i].style.zIndex = 1000 + i;
+        var wnd = allWindows[i];
+
+        if (hasClass(wnd, 'window-active')) {
+            removeClass(wnd, 'window-active');
+        }
+
+        if (!hasClass(wnd, 'window-inactive')) {
+            addClass(wnd, 'window-inactive');
+        }
+
+        wnd.style.zIndex = 1000 + i;
     }
 
-    // Unfocus all taskbar tabs - sync with window focus
     var taskbarContainer = document.getElementById('taskbar-tabs');
+
     if (taskbarContainer) {
         var allTabs = taskbarContainer.getElementsByTagName('div');
+
         for (var j = 0; j < allTabs.length; j++) {
             var tab = allTabs[j];
-            if (hasClass(tab, 'open-tab')) {
+
+            if (hasClass(tab, 'active')) {
                 removeClass(tab, 'active');
             }
         }
@@ -168,33 +207,44 @@ OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
         state.originalStyles = {
             width: windowElement.style.width || (computedStyle ? computedStyle.width : ''),
             height: windowElement.style.height || (computedStyle ? computedStyle.height : ''),
-            transform: windowElement.style.transform || "translate3d(0px, 0px, 0)",
+            transform: windowElement.style.transform || windowElement.style.msTransform || windowElement.style.mozTransform || windowElement.style.webkitTransform || "translate3d(0px, 0px, 0)",
             top: windowElement.style.top,
             left: windowElement.style.left,
             right: windowElement.style.right,
             bottom: windowElement.style.bottom,
-            position: windowElement.style.position || "absolute",
             xOffset: state.xOffset,
             yOffset: state.yOffset
         };
 
         windowElement.style.width = "100%";
-        windowElement.style.height = "90%";
+        windowElement.style.height = "calc(100vh - 35px)";  // todo: figure out a better way to handle this (i've tried many things and all failed lol)
+        // Old browsers: use the vendor prefix + normal translate (2d)
+        // New browsers: use the standard `transform` with translate3d() for GPU accel
+        windowElement.style.msTransform = "translate(0px, 0px)";
+        windowElement.style.webkitTransform = "translate(0px, 0px)";
+        windowElement.style.mozTransform = "translate(0px, 0px)";
         windowElement.style.transform = "translate3d(0px, 0px, 0)";
         windowElement.style.top = "0";
         windowElement.style.left = "0";
         windowElement.style.right = "auto";
         windowElement.style.bottom = "auto";
-        windowElement.style.position = "absolute";
 
         state.xOffset = 0;
         state.yOffset = 0;
         state.isMaximized = true;
-        addClass(taskbarTab, 'active');
+
+        if (!hasClass(taskbarTab, 'active')) {
+            addClass(taskbarTab, 'active');
+        }
+
+        // save state
+        OpticalMediaGood.windowStates[windowId] = state;
     } else {
         this.restoreWindow(windowId);
+
         state.xOffset = state.originalStyles.xOffset || 0;
         state.yOffset = state.originalStyles.yOffset || 0;
+
         addClass(taskbarTab, 'active');
     }
 };
@@ -292,13 +342,14 @@ OpticalMediaGood.WindowManager.Init.initializeDesktopClick = function() {
 
     addEventCompat(document, 'click', function(e) {
         var button = getClosestElement(e.target, '.title-bar-controls button');
+
         if (button) {
             return;
         }
-        
+
         var windowElement = getClosestElement(e.target, '.window');
         var titleBar = getClosestElement(e.target, '.title-bar');
-        
+
         if (titleBar) {
             var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
             OpticalMediaGood.WindowManager.State.focusWindow(windowId);
@@ -316,10 +367,8 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
     var currentDragWindow = null;
 
     function dragStart(e) {
-        // Only react on main button (usually left click)
         if (e.type === "mousedown" && e.button !== 0) return;
-        
-        // Don't start dragging when clicking buttons
+
         if (getClosestElement(e.target, '.title-bar-controls')) return;
 
         var titleBar = getClosestElement(e.target, '.title-bar');
@@ -339,8 +388,12 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
                 initialX = currentX;
                 initialY = currentY;
                 state.isDragging = false;
-                removeClass(windowElement, 'dragging');
+
+                if (hasClass(windowElement, 'dragging')) {
+                    removeClass(windowElement, 'dragging');
+                }
             }
+
             currentDragWindow = null;
         }
     }
@@ -382,10 +435,13 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
             }
 
             state.isDragging = true;
-            addClass(windowElement, 'dragging');
+
+            if (!hasClass(windowElement, 'dragging')) {
+                addClass(windowElement, 'dragging');
+            }
         } else {
-            e.preventDefault();
-            
+            preventDefaultCompat(e);
+
             if (e.type === "touchmove") {
                 currentX = e.touches[0].clientX - initialX;
                 currentY = e.touches[0].clientY - initialY;
@@ -420,16 +476,15 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
         var windowElement = document.getElementById(windowId);
         var state = OpticalMediaGood.windowStates[windowId];
 
-        e.stopPropagation();
+        stopPropagationCompat(e);
 
         if (hasClass(button, 'minimize-btn')) {
             windowElement.style.display = "none";
             state.isMinimized = true;
-            
-            // Check if there are other visible windows
+
             var otherVisibleWindowId = null;
             var highestZIndex = 0;
-            
+
             for (var i = 0; i < windows.length; i++) {
                 var checkWindow = document.getElementById(windows[i].id);
                 if (checkWindow && checkWindow.style.display !== 'none' && checkWindow.id !== windowId) {
@@ -440,13 +495,13 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
                     }
                 }
             }
-            
+
             if (otherVisibleWindowId) {
                 OpticalMediaGood.WindowManager.State.focusWindow(otherVisibleWindowId);
             } else {
                 OpticalMediaGood.WindowManager.State.unfocusAllWindows();
             }
-            
+
         } else if (hasClass(button, 'close-btn')) {
             windowElement.style.display = "none";
             state.isMinimized = false;
@@ -459,7 +514,6 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
                 originalConfig.active = false;
             }
 
-            // Check if there are other visible windows
             var otherVisibleWindowId = null;
             var highestZIndex = 0;
             
@@ -475,11 +529,8 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
             }
             
             if (otherVisibleWindowId) {
-                // Focus the previously focused window
-                // TODO: implement proper "last focused" tracking instead of just highest z-index
                 OpticalMediaGood.WindowManager.State.focusWindow(otherVisibleWindowId);
             } else {
-                // No other windows open, unfocus everything
                 OpticalMediaGood.WindowManager.State.unfocusAllWindows();
             }
         } else if (hasClass(button, 'maximize-btn')) {
@@ -498,8 +549,8 @@ OpticalMediaGood.WindowManager.Init.initializeTaskbar = function() {
         var windowElement = document.getElementById(windowId);
         var state = OpticalMediaGood.windowStates[windowId];
 
-        e.stopPropagation();
-        
+        stopPropagationCompat(e);
+
         if (windowElement.style.display === "none") {
             windowElement.style.display = "block";
             OpticalMediaGood.Utils.setTranslate(state.xOffset, state.yOffset, windowElement);

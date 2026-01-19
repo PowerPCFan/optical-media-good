@@ -55,21 +55,21 @@ var windows = [
         initialX: 30,
         initialY: 30,
         active: true,
-        style: 'background: black;'
+        style: 'background: #000000;'
     }
 ];
 
 
-addEventCompat(document, 'DOMContentLoaded', function() {
-    OpticalMediaGood.WindowManager.Init.initializeWindows();
+OpticalMediaGood.WindowManager.Init.initializeWindows();
 
-    var timeElement = document.getElementById('time');
-    var blink = document.getElementById('blink');
-    
-    setInterval(function() {
-        OpticalMediaGood.Utils.updateTime(timeElement);
-        if (blink) {
-            blink.style.opacity = blink.style.opacity === '0' ? '1' : '0';
-        }
-    }, 1000);
-});
+var timeElement = document.getElementById('time');
+var blink = document.getElementById('blink');
+
+OpticalMediaGood.Utils.updateTime(timeElement);
+
+setInterval(function() {
+    OpticalMediaGood.Utils.updateTime(timeElement);
+    if (blink) {
+        blink.style.opacity = (blink.style.opacity === '0' ? '1' : '0');
+    }
+}, 1000);

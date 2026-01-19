@@ -9,10 +9,6 @@
 }
 
 body {
-    /* flexbox doesn't work in old IE, and using block shouldnt affect the layout */
-    /* there are still remaining justify-content and align-items properties but it should ignore those */
-    display: block !important;
-
     /* remove image since we're setting it with DXImageTransform.Microsoft.AlphaImageLoader */
     background-image: none !important;
 

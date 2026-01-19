@@ -12,14 +12,21 @@
     font-style: normal;
 }
 
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background-color: #008080;
     color: #FFFFFF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    display: block;
+    height: 100%;
+    width: 100%;
     margin: 0;
+    padding: 0;
     overflow: hidden;
 }
 
@@ -30,6 +37,9 @@ body {
     top: 0;
     left: 0;
     margin: 0;
+    -webkit-transform: translate(0px, 0px);
+    -moz-transform: translate(0px, 0px);
+    -ms-transform: translate(0px, 0px);
     transform: translate3d(0px, 0px, 0);
 }
 
@@ -42,17 +52,6 @@ body {
 .heading {
     font-family: "Chicago", "ChicagoIE", serif;
     font-size: 32px;
-}
-
-.taskbar {
-    background-color: #245EDC;
-    background: linear-gradient(to bottom, #245EDC 0%, #3f8cf3 9%, #245EDC 18%, #245EDC 92%, #1941A5 100%) center/cover no-repeat;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 32px;
-    white-space: nowrap;
 }
 
 .start-button {
@@ -75,6 +74,9 @@ body {
 .start-button img {
     height: 20px;
     filter: drop-shadow(1px 1px 1px #222);
+    -webkit-transform: translateY(4px);
+    -moz-transform: translateY(4px);
+    -ms-transform: translateY(4px);
     transform: translateY(4px);
 }
 
@@ -177,12 +179,30 @@ pre::selection {
     color: black;
 }
 
-/* This is necessary because the taskbar needs border-box but if i set it globally, XP.css will break */
-.taskbar-container * {
-    box-sizing: border-box;
-    z-index: 9999;
-}
-
 .window-inactive .title-bar .title-bar-text {
     color: #d0d0d0 !important;
+}
+
+.taskbar-container {
+    height: 32px;
+    width: 100%;
+    z-index: 9999;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.taskbar-container * {
+    box-sizing: border-box;
+}
+
+.taskbar {
+    background-color: #245EDC;
+    background: linear-gradient(to bottom, #245EDC 0%, #3f8cf3 9%, #245EDC 18%, #245EDC 92%, #1941A5 100%) center/cover no-repeat;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
 }

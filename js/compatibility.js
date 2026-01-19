@@ -115,12 +115,34 @@ function setPositionCompat(element, x, y) {
         element.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     } else if (typeof element.style.webkitTransform !== 'undefined') {
         element.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
+    } else if (typeof element.style.mozTransform !== 'undefined') {
+        element.style.mozTransform = 'translate(' + x + 'px, ' + y + 'px)';
     } else if (typeof element.style.msTransform !== 'undefined') {
         element.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
     } else {
         element.style.position = 'absolute';
         element.style.left = x + 'px';
         element.style.top = y + 'px';
+    }
+}
+
+
+function preventDefaultCompat(event) {
+    if (event.preventDefault) {
+        event.preventDefault();
+    } else {
+        // IE
+        event.returnValue = false;
+    }
+}
+
+
+function stopPropagationCompat(event) {
+    if (event.stopPropagation) {
+        event.stopPropagation();
+    } else {
+        // IE
+        event.cancelBubble = true;
     }
 }
 
