@@ -1,17 +1,3 @@
-@font-face {
-    font-family: 'Chicago';
-    src: url("fonts/chicago.ttf") format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Tahoma";
-    src: url("fonts/tahoma.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
 html {
     margin: 0;
     padding: 0;
@@ -43,14 +29,8 @@ body {
     transform: translate3d(0px, 0px, 0);
 }
 
-.title-bar {
-    /* pretty sure XP uses Tahoma not Trebuchet MS for window titles */
-    /* so this is just a little patch for that */
-    font-family: "Tahoma", "TahomaIE", system-ui;
-}
-
 .heading {
-    font-family: "Chicago", "ChicagoIE", serif;
+    font-family: "Chicago", serif;
     font-size: 32px;
 }
 
@@ -65,7 +45,7 @@ body {
     background: radial-gradient(circle, #5eac56 0%, #3c873c 100%) center/cover no-repeat;
     box-shadow: 0px 5px 10px #79ce71 inset, 4px 0 8px #3f8cf3;
     padding: 2px 25px 6px 10px;
-    text-shadow: 1px 1px 3px #222;
+    text-shadow: 1px 1px 3px #222222;
     border-radius: 0px 8px 8px 0px;
     margin-right: 16px;
     cursor: pointer;
@@ -73,7 +53,7 @@ body {
 
 .start-button img {
     height: 20px;
-    filter: drop-shadow(1px 1px 1px #222);
+    filter: drop-shadow(1px 1px 1px #222222);
     -webkit-transform: translateY(4px);
     -moz-transform: translateY(4px);
     -ms-transform: translateY(4px);
@@ -93,10 +73,10 @@ body {
     height: 26px;
     margin: 3px 2px 3px 0;
     background-color: #4892F7;
-    background: url("img/button/1.png") no-repeat 0 0;
+    background: url("../img/taskbar/1.png") no-repeat 0 0;
     border: 1px solid #306FD9;
     border-radius: 2px;
-    font-family: "Tahoma", "TahomaIE", monospace;
+    font-family: "Tahoma", monospace;
     font-size: 14px;
     line-height: 26px;
     padding: 0 8px;
@@ -108,11 +88,11 @@ body {
 }
 
 .open-tab:hover {
-    background: url("img/button/2.png") no-repeat 0 0;
+    background: url("../img/taskbar/2.png") no-repeat 0 0;
 }
 
 .open-tab.active {
-    background: url("img/button/3.png") no-repeat 0 0;
+    background: url("../img/taskbar/3.png") no-repeat 0 0;
 }
 
 .open-tab img {
@@ -126,14 +106,14 @@ body {
     display: inline-block;
     vertical-align: top;
     height: 32px;
-    font-family: "Tahoma", "TahomaIE", monospace;
+    font-family: "Tahoma", monospace;
     font-size: 14px;
     line-height: 14px;
     background: linear-gradient(to bottom, #1290E9 0%, #19B9F3 9%, #1290E9 18%, #1290E9 92%, #1941A5 100%) center/cover no-repeat;
     box-shadow: 0px 5px 10px #14A5F0 inset, 0px 5px 10px #333333;
     padding: 9px 15px 9px 25px;
     border-left: 1px solid #092E51;
-    text-shadow: 1px 1px 2px #222;
+    text-shadow: 1px 1px 2px #222222;
     cursor: pointer;
     text-transform: uppercase;
     position: absolute;

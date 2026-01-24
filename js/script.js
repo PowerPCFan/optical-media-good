@@ -2,7 +2,7 @@ var windows = [
     {
         id: 'ie-window',
         title: 'Microsoft Internet Explorer',
-        content: '<div style="margin: 0; padding: 0;">' +
+        content: '<div style="margin: 0; padding: 0; height: 100%;">' +
             '<div style="padding: 4px; border-bottom: 1px solid #808080; background: #f0f0f0;">' +
                 '<div style="white-space: nowrap;">' +
                     '<button onclick="ieGoBack()" style="width: 24px; height: 24px; padding: 2px; margin-right: 1px; display: inline-block; vertical-align: middle;">' +
@@ -21,14 +21,14 @@ var windows = [
                         '<img src="img/ie/home.png" style="width: 16px; height: 16px; vertical-align: middle;">' +
                     '</button>' +
                     '<span style="color: black !important; font-family: Pixelated MS Sans Serif, serif; margin-right: 4px; display: inline-block; vertical-align: middle;">Address</span>' +
-                    '<input type="text" id="ie-address-bar" value="http://frogfind.com/" onkeypress="ieAddressKeyPress(event)" style="width: 160px; height: 20px; margin-right: 4px; display: inline-block; vertical-align: middle;">' +
+                    '<input type="text" id="ie-address-bar" class="input-text" value="http://frogfind.com/" onkeypress="ieAddressKeyPress(event)" style="width: 160px; height: 20px; margin-right: 4px; display: inline-block; vertical-align: middle;">' +
                     '<button onclick="ieGo()" style="height: 24px; padding: 2px 6px; display: inline-block; vertical-align: middle;">' +
                         '<img src="img/ie/go.png" style="width: 16px; height: 16px; vertical-align: middle;">' +
                         '<span style="margin-left: 2px; vertical-align: middle;">Go</span>' +
                     '</button>' +
                 '</div>' +
             '</div>' +
-            '<iframe id="ie-iframe" src="http://frogfind.com/" style="width: 100%; height: 400px; border: none; background: white;"></iframe>' +
+            '<iframe id="ie-iframe" src="http://frogfind.com/" style="width: 100%; height: 100%; border: none; background: white;"></iframe>' +
         '</div>',
         icon: 'img/apps/ie6.png',
         taskbarText: 'Internet Explorer',

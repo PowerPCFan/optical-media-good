@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'Chicago';
+    src: url("../fonts/chicago/chicago.ttf?#iefix") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Tahoma";
+    src: url("../fonts/tahoma/tahoma.ttf?#iefix") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("../fonts/ms-sans-serif/ms_sans_serif.woff?#iefix") format("woff");
+    src: url("../fonts/ms-sans-serif/ms_sans_serif.woff2?#iefix") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("../fonts/ms-sans-serif/ms_sans_serif_bold.woff?#iefix") format("woff") 
+        url("../fonts/ms-sans-serif/ms_sans_serif_bold.woff2?#iefix") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Perfect DOS";
+    src: url("../fonts/perfect-dos/PerfectDOSVGA437Win.woff?#iefix") format("woff"),
+        url("../fonts/perfect-dos/PerfectDOSVGA437Win.woff2?#iefix") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}

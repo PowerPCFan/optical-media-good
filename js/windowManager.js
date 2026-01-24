@@ -9,9 +9,9 @@ OpticalMediaGood.WindowManager.Renderer.createWindowHTML = function(windowConfig
             '<div class="title-bar" id="' + windowConfig.id + OpticalMediaGood.Suffixes.TITLEBAR + '">' +
                 '<div class="title-bar-text">' + windowConfig.title + '</div>' +
                 '<div class="title-bar-controls">' +
-                    '<button class="minimize-btn" aria-label="Minimize"></button>' +
-                    '<button class="maximize-btn" aria-label="Maximize"></button>' +
-                    '<button class="close-btn" aria-label="Close"></button>' +
+                    '<button class="minimize-btn"></button>' +
+                    '<button class="maximize-btn"></button>' +
+                    '<button class="close-btn"></button>' +
                 '</div>' +
             '</div>' +
             '<div class="window-body" style="' + (windowConfig.height ? 'height: ' + windowConfig.height + ';' : '') + ' ' + (windowConfig.windowBodyStyle ? windowConfig.windowBodyStyle : '') + '">' +
@@ -195,19 +195,22 @@ OpticalMediaGood.WindowManager.State.unfocusAllWindows = function() {
 };
 
 
-OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
+OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId, buttonElement) {
     var state = OpticalMediaGood.windowStates[windowId];
     var windowElement = document.getElementById(windowId);
     var taskbarTab = document.getElementById(windowId + OpticalMediaGood.Suffixes.TAB);
     this.focusWindow(windowId);
 
     if (!state.isMaximized) {
-        var computedStyle = window.getComputedStyle ? window.getComputedStyle(windowElement) : null;
+        // Window is being maximized
+
+        var computedStyle = getComputedStyleCompat(windowElement);
+        var defaultTransform = OpticalMediaGood.Supports3DTransform ? "translate3d(0px, 0px, 0)" : "translate(0px, 0px)";
 
         state.originalStyles = {
-            width: windowElement.style.width || (computedStyle ? computedStyle.width : ''),
-            height: windowElement.style.height || (computedStyle ? computedStyle.height : ''),
-            transform: windowElement.style.transform || windowElement.style.msTransform || windowElement.style.mozTransform || windowElement.style.webkitTransform || "translate3d(0px, 0px, 0)",
+            width: windowElement.style.width || computedStyle.getPropertyValue('width'),
+            height: windowElement.style.height || computedStyle.getPropertyValue('height'),
+            transform: windowElement.style.transform || windowElement.style.msTransform || windowElement.style.mozTransform || windowElement.style.webkitTransform || defaultTransform,
             top: windowElement.style.top,
             left: windowElement.style.left,
             right: windowElement.style.right,
@@ -217,13 +220,11 @@ OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
         };
 
         windowElement.style.width = "100%";
-        windowElement.style.height = "calc(100vh - 35px)";  // todo: figure out a better way to handle this (i've tried many things and all failed lol)
-        // Old browsers: use the vendor prefix + normal translate (2d)
-        // New browsers: use the standard `transform` with translate3d() for GPU accel
-        windowElement.style.msTransform = "translate(0px, 0px)";
-        windowElement.style.webkitTransform = "translate(0px, 0px)";
-        windowElement.style.mozTransform = "translate(0px, 0px)";
-        windowElement.style.transform = "translate3d(0px, 0px, 0)";
+        windowElement.style.height = "90%";  // todo: figure out a better way to handle this- calc() is out of the question due to jankiness and lack of IE8 support, and vh units aren't supported either
+        windowElement.style.msTransform = defaultTransform;
+        windowElement.style.webkitTransform = defaultTransform;
+        windowElement.style.mozTransform = defaultTransform;
+        windowElement.style.transform = defaultTransform;
         windowElement.style.top = "0";
         windowElement.style.left = "0";
         windowElement.style.right = "auto";
@@ -237,10 +238,16 @@ OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
             addClass(taskbarTab, 'active');
         }
 
+        if (buttonElement) {
+            // Change button to "restore" icon
+            removeClass(buttonElement, 'maximize-btn');
+            addClass(buttonElement, 'restore-btn');
+        }
+
         // save state
         OpticalMediaGood.windowStates[windowId] = state;
     } else {
-        this.restoreWindow(windowId);
+        this.restoreWindow(windowId, buttonElement);
 
         state.xOffset = state.originalStyles.xOffset || 0;
         state.yOffset = state.originalStyles.yOffset || 0;
@@ -250,7 +257,9 @@ OpticalMediaGood.WindowManager.State.toggleMaximize = function(windowId) {
 };
 
 
-OpticalMediaGood.WindowManager.State.restoreWindow = function(windowId) {
+OpticalMediaGood.WindowManager.State.restoreWindow = function(windowId, buttonElement) {
+    // restores a maximized window to its original size and position
+
     var state = OpticalMediaGood.windowStates[windowId];
     var windowElement = document.getElementById(windowId);
 
@@ -260,6 +269,15 @@ OpticalMediaGood.WindowManager.State.restoreWindow = function(windowId) {
         }
     }
     state.isMaximized = false;
+
+    if (buttonElement) {
+        // Change button to "maximize" icon
+        removeClass(buttonElement, 'restore-btn');
+        addClass(buttonElement, 'maximize-btn');
+    }
+
+    // save state
+    OpticalMediaGood.windowStates[windowId] = state;
 };
 
 
@@ -301,6 +319,7 @@ OpticalMediaGood.WindowManager.Init.initializeWindows = function() {
 
 OpticalMediaGood.WindowManager.Init.initializeDesktopClick = function() {
     addEventCompat(document, 'click', function(e) {
+        e = e || window.event;
         var target = e.target || e.srcElement;
 
         var clickedOnUI = false;
@@ -341,14 +360,16 @@ OpticalMediaGood.WindowManager.Init.initializeDesktopClick = function() {
     });
 
     addEventCompat(document, 'click', function(e) {
-        var button = getClosestElement(e.target, '.title-bar-controls button');
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        var button = target.closest('.title-bar-controls button');
 
         if (button) {
             return;
         }
 
-        var windowElement = getClosestElement(e.target, '.window');
-        var titleBar = getClosestElement(e.target, '.title-bar');
+        var windowElement = target.closest('.window');
+        var titleBar = target.closest('.title-bar');
 
         if (titleBar) {
             var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
@@ -366,12 +387,26 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
     var currentX = 0, currentY = 0;
     var currentDragWindow = null;
 
+    function isLeftClick(e) {
+        e = e || window.event;
+
+        if (document.addEventListener) {
+            return e.button === 0;
+        } else {
+            // IE uses 1 for left click
+            return e.button === 1;
+        }
+    }
+
     function dragStart(e) {
-        if (e.type === "mousedown" && e.button !== 0) return;
+        e = e || window.event;
+        var target = e.target || e.srcElement;
 
-        if (getClosestElement(e.target, '.title-bar-controls')) return;
+        if (!target) return;
+        if (e.type === "mousedown" && !isLeftClick(e)) return;
+        if (target.closest('.title-bar-controls')) return;
 
-        var titleBar = getClosestElement(e.target, '.title-bar');
+        var titleBar = target.closest('.title-bar');
         if (!titleBar) return;
 
         var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
@@ -399,6 +434,7 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
     }
 
     function drag(e) {
+        e = e || window.event;
         if (!currentDragWindow) return;
 
         var state = OpticalMediaGood.windowStates[currentDragWindow];
@@ -432,6 +468,16 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
                 initialY = clientY - newY;
 
                 OpticalMediaGood.Utils.setTranslate(newX, newY, windowElement);
+
+                var titleBar = document.getElementById(currentDragWindow + OpticalMediaGood.Suffixes.TITLEBAR);
+                if (titleBar) {
+                    // i thought querySelector didn't work in IE8 but it seems to work fine? so i guess i'll leave this
+                    var restoreBtn = titleBar.querySelector('.restore-btn');
+                    if (restoreBtn) {
+                        removeClass(restoreBtn, 'restore-btn');
+                        addClass(restoreBtn, 'maximize-btn');
+                    }
+                }
             }
 
             state.isDragging = true;
@@ -468,10 +514,15 @@ OpticalMediaGood.WindowManager.Init.initializeDragSystem = function() {
 
 OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
     addEventCompat(document, 'click', function(e) {
-        var button = getClosestElement(e.target, '.title-bar-controls button');
+        e = e || window.event;
+
+        var target = e.target || e.srcElement;
+        if (!target) return;
+
+        var button = target.closest('.title-bar-controls button');
         if (!button) return;
 
-        var titleBar = getClosestElement(button, '.title-bar');
+        var titleBar = button.closest('.title-bar');
         var windowId = titleBar.id.replace(OpticalMediaGood.Suffixes.TITLEBAR, '');
         var windowElement = document.getElementById(windowId);
         var state = OpticalMediaGood.windowStates[windowId];
@@ -516,7 +567,7 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
 
             var otherVisibleWindowId = null;
             var highestZIndex = 0;
-            
+
             for (var i = 0; i < windows.length; i++) {
                 var checkWindow = document.getElementById(windows[i].id);
                 if (checkWindow && checkWindow.style.display !== 'none' && checkWindow.id !== windowId) {
@@ -527,14 +578,14 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
                     }
                 }
             }
-            
+
             if (otherVisibleWindowId) {
                 OpticalMediaGood.WindowManager.State.focusWindow(otherVisibleWindowId);
             } else {
                 OpticalMediaGood.WindowManager.State.unfocusAllWindows();
             }
-        } else if (hasClass(button, 'maximize-btn')) {
-            OpticalMediaGood.WindowManager.State.toggleMaximize(windowId);
+        } else if (hasClass(button, 'maximize-btn') || hasClass(button, 'restore-btn')) {
+            OpticalMediaGood.WindowManager.State.toggleMaximize(windowId, button);
         }
     });
 };
@@ -542,7 +593,10 @@ OpticalMediaGood.WindowManager.Init.initializeWindowControls = function() {
 
 OpticalMediaGood.WindowManager.Init.initializeTaskbar = function() {
     addEventCompat(document, 'click', function(e) {
-        var tab = getClosestElement(e.target, '.open-tab');
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+
+        var tab = target.closest('.open-tab');
         if (!tab) return;
 
         var windowId = tab.id.replace(OpticalMediaGood.Suffixes.TAB, '');

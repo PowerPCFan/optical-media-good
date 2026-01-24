@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'Chicago';
+    src: url("../fonts/chicago/chicago.eot");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Tahoma';
+    src: url("../fonts/tahoma/tahoma.eot");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("../fonts/ms-sans-serif/ms_sans_serif.eot");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("../fonts/ms-sans-serif/ms_sans_serif_bold.eot");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Perfect DOS";
+    src: url("../fonts/perfect-dos/PerfectDOSVGA437Win.eot");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-image: none !important;
+
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+        src='img/wallpapers/Bliss.jpg',
+        sizingMethod='scale'
+    );
+}
+
+/* use images instead of svg for window buttons */
+/* Minimize */
+.title-bar-controls button[aria-label="Minimize"],
+.title-bar-controls .minimize-btn {
+    background-image: url("../img/buttons-ie-only/minimize.png");
+}
+.title-bar-controls button[aria-label="Minimize"]:hover,
+.title-bar-controls .minimize-btn:hover {
+    background-image: url("../img/buttons-ie-only/minimize-hover.png");
+}
+.title-bar-controls button[aria-label="Minimize"]:not(:disabled):active,
+.title-bar-controls .minimize-btn:not(:disabled):active {
+    background-image: url("../img/buttons-ie-only/minimize-active.png");
+}
+
+/* Maximize */
+.title-bar-controls button[aria-label="Maximize"],
+.title-bar-controls .maximize-btn {
+    background-image: url("../img/buttons-ie-only/maximize.png");
+}
+.title-bar-controls button[aria-label="Maximize"]:hover,
+.title-bar-controls .maximize-btn:hover {
+    background-image: url("../img/buttons-ie-only/maximize-hover.png");
+}
+.title-bar-controls button[aria-label="Maximize"]:not(:disabled):active,
+.title-bar-controls .maximize-btn:not(:disabled):active {
+    background-image: url("../img/buttons-ie-only/maximize-active.png");
+}
+
+/* Restore */
+.title-bar-controls button[aria-label="Restore"],
+.title-bar-controls .restore-btn {
+    background-image: url("../img/buttons-ie-only/restore.png");
+}
+.title-bar-controls button[aria-label="Restore"]:hover,
+.title-bar-controls .restore-btn:hover {
+    background-image: url("../img/buttons-ie-only/restore-hover.png");
+}
+.title-bar-controls button[aria-label="Restore"]:not(:disabled):active,
+.title-bar-controls .restore-btn:not(:disabled):active {
+    background-image: url("../img/buttons-ie-only/restore-active.png");
+}
+
+/* Help */
+.title-bar-controls button[aria-label="Help"],
+.title-bar-controls .help-btn {
+    background-image: url("../img/buttons-ie-only/help.png");
+}
+.title-bar-controls button[aria-label="Help"]:hover,
+.title-bar-controls .help-btn:hover {
+    background-image: url("../img/buttons-ie-only/help-hover.png");
+}
+.title-bar-controls button[aria-label="Help"]:not(:disabled):active,
+.title-bar-controls .help-btn:not(:disabled):active {
+    background-image: url("../img/buttons-ie-only/help-active.png");
+}
+
+/* Close */
+.title-bar-controls button[aria-label="Close"],
+.title-bar-controls .close-btn {
+    background-image: url("../img/buttons-ie-only/close.png");
+}
+.title-bar-controls button[aria-label="Close"]:hover,
+.title-bar-controls .close-btn:hover {
+    background-image: url("../img/buttons-ie-only/close-hover.png");
+}
+.title-bar-controls button[aria-label="Close"]:not(:disabled):active,
+.title-bar-controls .close-btn:not(:disabled):active {
+    background-image: url("../img/buttons-ie-only/close-active.png");
+}

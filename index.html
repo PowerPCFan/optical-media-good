@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Optical Media Good</title>
-    <link rel="stylesheet" href="xp.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/xp.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- load IE css after main css so it properly overrides -->
 
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="ie.css">
+    <link rel="stylesheet" href="css/ie.css">
     <![endif]-->
-
-    <!-- polyfills + cross-platform functions -->
-    <script src="js/compatibility.js"></script>
 </head>
 <body>
     <div id="windows-container"></div>
     <div class="taskbar-container">
         <div class="taskbar">
-            <div class="start-button"><img src="img/windows.svg"> start</div>
+            <div class="start-button"><img src="img/taskbar/windows.png"> start</div>
             <div class="opened-tabs" id="taskbar-tabs"></div>
             <div id="time" class="time">12:00 AM</div>
         </div>
     </div>
+
+    <!-- polyfills + cross-platform functions -->
+    <script src="js/compatibility.js"></script>
 
     <!-- random background -->
     <script src="js/randomBackground.js"></script>
@@ -33,6 +36,12 @@
     <script src="js/ieBrowser.js"></script>
 
     <!-- main script -->
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
+
+    <!-- load IE script after other scripts so it properly overrides -->
+
+    <!--[if lte IE 8]>
+    <script src="js/ie.js"></script>
+    <![endif]-->
 </body>
 </html>

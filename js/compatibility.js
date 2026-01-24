@@ -1,47 +1,43 @@
+// Polyfill for Element.matches() and Element.closest()
+// Source: https://unpkg.com/element-closest
+!(function (e) {
+    var t = e.Element.prototype;
+    ("function" != typeof t.matches &&
+        (t.matches =
+            t.msMatchesSelector ||
+            t.mozMatchesSelector ||
+            t.webkitMatchesSelector ||
+            function (e) {
+                for (
+                    var t = (this.document || this.ownerDocument).querySelectorAll(e),
+                        o = 0;
+                    t[o] && t[o] !== this;
+                )
+                    ++o;
+                return Boolean(t[o]);
+            }),
+        "function" != typeof t.closest &&
+            (t.closest = function (e) {
+                for (var t = this; t && 1 === t.nodeType; ) {
+                    if (t.matches(e)) return t;
+                    t = t.parentNode;
+                }
+                return null;
+            }));
+})(window);
+
+
 function addEventCompat(element, event, handler) {
     if (element.addEventListener) {
-        element.addEventListener(event, handler);
+        element.addEventListener(event, handler, false);
     } else if (element.attachEvent) {
-        element.attachEvent('on' + event, handler);
+        element.attachEvent('on' + event, function() {
+            var e = window.event;
+            return handler.call(element, e);
+        });
     } else {
         element['on' + event] = handler;
     }
-}
-
-
-function querySelectorCompat(selector) {
-    if (document.querySelector) {
-        return document.querySelector(selector);
-    }
-
-    if (selector.charAt(0) === '#') {
-        return document.getElementById(selector.substring(1));
-    }
-
-    if (selector.charAt(0) === '.') {
-        var className = selector.substring(1);
-        var elements = document.getElementsByTagName('*');
-        for (var i = 0; i < elements.length; i++) {
-            if (hasClass(elements[i], className)) {
-                return elements[i];
-            }
-        }
-    }
-
-    if (selector.charAt(0) === '[') {
-        var match = selector.match(/\[(.*?)="(.*?)"\]/);
-        if (match) {
-            var attrName = match[1];
-            var attrValue = match[2];
-            var elements = document.getElementsByTagName('*');
-            for (var i = 0; i < elements.length; i++) {
-                if (elements[i].getAttribute && elements[i].getAttribute(attrName) === attrValue) {
-                    return elements[i];
-                }
-            }
-        }
-    }
-    return null;
 }
 
 
@@ -111,15 +107,20 @@ function forEachCompat(nodeList, callback) {
 
 
 function setPositionCompat(element, x, y) {
+    if (!element || !element.style || isNaN(x) || isNaN(y)) return;
+
+    var transformValue = OpticalMediaGood.Supports3DTransform ? 'translate3d(' + x + 'px, ' + y + 'px, 0)' : 'translate(' + x + 'px, ' + y + 'px)';
+
     if (typeof element.style.transform !== 'undefined') {
-        element.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-    } else if (typeof element.style.webkitTransform !== 'undefined') {
-        element.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
-    } else if (typeof element.style.mozTransform !== 'undefined') {
-        element.style.mozTransform = 'translate(' + x + 'px, ' + y + 'px)';
-    } else if (typeof element.style.msTransform !== 'undefined') {
-        element.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
+        element.style.transform = transformValue;
+    // } else if (typeof element.style.webkitTransform !== 'undefined') {
+    //     element.style.webkitTransform = transformValue;
+    // } else if (typeof element.style.mozTransform !== 'undefined') {
+    //     element.style.mozTransform = transformValue;
+    // } else if (typeof element.style.msTransform !== 'undefined') {
+    //     element.style.msTransform = transformValue;
     } else {
+        element.style.zoom = 1;
         element.style.position = 'absolute';
         element.style.left = x + 'px';
         element.style.top = y + 'px';
@@ -128,6 +129,8 @@ function setPositionCompat(element, x, y) {
 
 
 function preventDefaultCompat(event) {
+    event = event || window.event;
+
     if (event.preventDefault) {
         event.preventDefault();
     } else {
@@ -138,6 +141,8 @@ function preventDefaultCompat(event) {
 
 
 function stopPropagationCompat(event) {
+    event = event || window.event;
+
     if (event.stopPropagation) {
         event.stopPropagation();
     } else {
@@ -183,21 +188,6 @@ function findInArray(array, callback) {
 }
 
 
-function getClosestElement(element, selector) {
-    if (element.closest) {
-        return element.closest(selector);
-    }
-
-    while (element && element !== document) {
-        if (selector.charAt(0) === '.' && hasClass(element, selector.substring(1))) {
-            return element;
-        }
-        element = element.parentNode;
-    }
-    return null;
-}
-
-
 function containsElement(parent, child) {
     if (parent.contains) {
         return parent.contains(child);
@@ -210,4 +200,30 @@ function containsElement(parent, child) {
         child = child.parentNode;
     }
     return false;
+}
+
+
+function getComputedStyleCompat(element) {
+    if (window.getComputedStyle) {
+        return window.getComputedStyle(element);
+    } else {
+        // Internet Explorer - normalize from camelCase to kebab-case since getComputedStyle uses kebab-case (CSS's property format)
+        var style = element.currentStyle;
+        var normalized = {};
+
+        for (var prop in style) {
+            try {
+                var kebab = prop.replace(/([A-Z])/g, "-$1").toLowerCase();
+                normalized[kebab] = style[prop];
+            } catch (e) {
+                // ignore errors
+            }
+        }
+
+        normalized.getPropertyValue = function(property) {
+            return this[property] || null;
+        };
+
+        return normalized;
+    }
 }

@@ -69,6 +69,8 @@ OpticalMediaGood.IEBrowser.go = function() {
 
 
 OpticalMediaGood.IEBrowser.addressKeyPress = function(event) {
+    event = event || window.event;
+
     var key = event.key || event.keyCode;
     if (key === 'Enter' || key === 13) {
         OpticalMediaGood.IEBrowser.go();
@@ -83,4 +85,7 @@ function ieStop() { OpticalMediaGood.IEBrowser.stop(); }
 function ieRefresh() { OpticalMediaGood.IEBrowser.refresh(); }
 function ieHome() { OpticalMediaGood.IEBrowser.home(); }
 function ieGo() { OpticalMediaGood.IEBrowser.go(); }
-function ieAddressKeyPress(event) { OpticalMediaGood.IEBrowser.addressKeyPress(event); }
+function ieAddressKeyPress(event) {
+    event = event || window.event;
+    OpticalMediaGood.IEBrowser.addressKeyPress(event);
+}
